@@ -5,7 +5,9 @@
   {registered, []},
   {applications, [
                   kernel,
-                  stdlib
+                  stdlib,
+                  syntax_tools,
+                  compiler
                  ]},
   {mod, { fs_sync_app, []}},
   {env, []}
