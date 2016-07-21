@@ -1,0 +1,12 @@
+{application, fs_sync,
+ [
+  {description, ""},
+  {vsn, "1"},
+  {registered, []},
+  {applications, [
+                  kernel,
+                  stdlib
+                 ]},
+  {mod, { fs_sync_app, []}},
+  {env, []}
+ ]}.
