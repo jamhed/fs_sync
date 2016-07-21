@@ -5,5 +5,6 @@ devel:
 	relx -d
 	cp -a cfg _rel/fs_sync
 
-console: devel
+console: 
+	rebar co
 	_rel/fs_sync/bin/fs_sync console
