@@ -3,14 +3,12 @@
 -include_lib("scl/include/logger.hrl").
 
 handle({beam, File}) ->
-	?INFO("beam: ~s", [File]),
 	Module = erlang:list_to_atom(filename:basename(File, ".beam")),
 	{Module, Binary, Filename} = code:get_object_code(Module),
 	code:load_binary(Module, Filename, Binary),
 	?INFO("module '~p' replaced by beam file.", [Module]),
 	ok;
 handle({erl, File}) ->
-	?INFO("erl: ~s", [File]),
 	Module = erlang:list_to_atom(filename:basename(File, ".erl")),
 	ModuleProps = Module:module_info(compile),
 	Source = proplists:get_value(source, ModuleProps),

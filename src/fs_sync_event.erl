@@ -9,10 +9,11 @@ init(_Args) ->
 handle_event({Event, File}, State) when Event == modify; Event == rename ->
 	Type = file_type:detect(File),
 	try
+		?INFO("handling ~120p: ~120p", [Type, File]),
 		type_handler:handle({Type, File})
 	catch
 		Error:Class ->
-			?ERR("Error handling type:~p file:~p~nERROR: ~p ~p", [Type, File, Class, Error])
+			?ERR("error handling ~120p error:~120p ~120p file:~120p", [Type, Class, Error, File])
 	end,
 	{ok, State};
 handle_event(_Event, State) ->
