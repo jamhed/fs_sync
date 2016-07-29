@@ -1,4 +1,0 @@
-[
-{log_modules, []},
-{skip_modules, []}
-].

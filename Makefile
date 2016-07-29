@@ -3,7 +3,6 @@ devel:
 	rebar get-deps
 	rebar compile
 	relx -d
-	cp -a cfg _rel/fs_sync
 
 console: 
 	rebar co
