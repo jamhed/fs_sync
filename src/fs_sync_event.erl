@@ -7,14 +7,7 @@ init(_Args) ->
 	{ok, []}.
 
 handle_event({Event, File}, State) when Event == modify; Event == rename ->
-	Type = file_type:detect(File),
-	try
-		?INFO("handling ~120p: ~120p", [Type, File]),
-		type_handler:handle({Type, File})
-	catch
-		Error:Class ->
-			?ERR("error handling ~120p error:~120p ~120p file:~120p", [Type, Class, Error, File])
-	end,
+	handle_type(file_type:detect(File), File),
 	{ok, State};
 handle_event(_Event, State) ->
 	%% ?INFO("skip event: ~180p", [_Event]),
@@ -26,3 +19,13 @@ terminate(_Args, _State) ->
 handle_call(_Req, S) -> {ok, ok, S}.
 handle_info(_Req, S) -> {ok, S}.
 code_change(_OldVsn, S, _Extra) -> {ok, S}.
+
+handle_type(undefined, _File) -> skip;
+handle_type(Type, File) ->
+	try
+		?INFO("handling ~120p: ~120p", [Type, File]),
+		type_handler:handle({Type, File})
+	catch
+		Error:Class ->
+			?ERR("error handling ~120p error:~120p ~120p file:~120p", [Type, Class, Error, File])
+	end.
