@@ -19,4 +19,5 @@ TODO
 2. Speed-up naive beam reloader (notify beam is ready after compilation)
 3. Configuration parameters: naive reloader -- rescan period, follow/skip symlinks.
 4. configure external commands as "default" handlers per file type (e.g. rebar co, make, ...)
-5. configure external commands to call as extra after internal compiler/reloader 
+5. configure external commands to call as extra after internal compiler/reloader
+6. get rid of scl dependencies in favor of sys.config/error_logger/lager 
