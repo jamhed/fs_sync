@@ -27,5 +27,5 @@ handle_type(Type, File) ->
 		type_handler:handle({Type, File})
 	catch
 		Error:Class ->
-			?ERR("error handling ~120p error:~120p ~120p file:~120p", [Type, Class, Error, File])
+			?ERR("handling ~120p ~120p:~120p file:~120p", [Type, Class, Error, File])
 	end.
