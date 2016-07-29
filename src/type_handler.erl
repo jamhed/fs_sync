@@ -15,10 +15,8 @@ handle({erl, File}) ->
 	Options = transform_options(Module, Source, proplists:get_value(options, ModuleProps)),
 	handle_erl_compile(Module, compile:file(filename:rootname(File), [return|Options])),
 	ok;
-handle({undefined, _File}) ->
-	ok;
 handle({Type, File}) ->
-	?INFO("unhandled file:~p type:~p", [File, Type]),
+	?INFO("undefined handler for type:~p file:~p", [Type, File]),
 	ok.
 
 handle_erl_compile(Module, {ok, Module, []}) ->
