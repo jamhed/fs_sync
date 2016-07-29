@@ -8,7 +8,12 @@ init(_Args) ->
 
 handle_event({Event, File}, State) when Event == modify; Event == rename ->
 	Type = file_type:detect(File),
-	type_handler:handle({Type, File}),
+	try
+		type_handler:handle({Type, File})
+	catch
+		Error:Class ->
+			?ERR("Error handling type:~p file:~p~nERROR: ~p ~p", [Type, File, Class, Error])
+	end,
 	{ok, State};
 handle_event(_Event, State) ->
 	%% ?INFO("skip event: ~180p", [_Event]),
