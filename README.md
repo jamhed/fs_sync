@@ -16,4 +16,5 @@ TODO
 ====
 
 1. More docs and usage examples
-2. Speed-up naive beam reloader (notify beam is ready after compilation).
+2. Speed-up naive beam reloader (notify beam is ready after compilation)
+3. Configuration parameters: naive reloader -- rescan period, follow/skip symlinks.
