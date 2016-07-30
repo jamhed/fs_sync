@@ -1,6 +1,6 @@
 -module(type_handler).
 -export([handle/1, explode_path/2]).
--include_lib("scl/include/logger.hrl").
+-include("logger.hrl").
 
 handle({beam, File}) ->
 	Module = erlang:list_to_atom(filename:basename(File, ".beam")),

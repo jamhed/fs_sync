@@ -1,6 +1,6 @@
 -module(fs_sync_event).
 -behaviour(gen_event).
--include_lib("scl/include/logger.hrl").
+-include_lib("fs_sync/include/logger.hrl").
 -export([init/1, handle_event/2, terminate/2, handle_info/2, handle_call/2, code_change/3]).
 
 init(_Args) ->
