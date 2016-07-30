@@ -1,4 +1,4 @@
 -define(MSGSTR(M,L,S), lists:concat([atom_to_list(M), ".", integer_to_list(L), ": ", S, "~n"])).
--define(INFO(S, A), error_logger:info_msg(?MSGSTR(?MODULE, ?LINE, S), [A])).
--define(ERR(S, A), error_logger:error_msg(?MSGSTR(?MODULE, ?LINE, S), [A])).
--define(WARN(S, A), error_logger:warning_msg(?MSGSTR(?MODULE, ?LINE, S), [A])).
+-define(INFO(S, A), error_logger:info_msg(?MSGSTR(?MODULE, ?LINE, S), A)).
+-define(ERR(S, A), error_logger:error_msg(?MSGSTR(?MODULE, ?LINE, S), A)).
+-define(WARN(S, A), error_logger:warning_msg(?MSGSTR(?MODULE, ?LINE, S), A)).
