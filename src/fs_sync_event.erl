@@ -21,11 +21,12 @@ handle_info(_Req, S) -> {ok, S}.
 code_change(_OldVsn, S, _Extra) -> {ok, S}.
 
 handle_type(undefined, _File) -> skip;
-handle_type(Type, File) ->
+handle_type(Type, File) when is_atom(Type) ->
 	try
 		?INFO("handling ~120p: ~120p", [Type, File]),
 		type_handler:handle({Type, File})
 	catch
 		Error:Class ->
 			?ERR("handling ~120p ~120p:~120p file:~120p", [Type, Class, Error, File])
-	end.
+	end;
+handle_type(_, _File) -> skip.
