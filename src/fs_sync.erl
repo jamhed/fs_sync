@@ -6,7 +6,9 @@
 
 -record(state, {path, fs}).
 
-go(Path) -> gen_server:start_link(?MODULE, [Path], []).
+go(Path) ->
+	gen_server:start_link({local, ?MODULE}, ?MODULE, [Path], []).
+
 go() ->
 	{ok, Path} = file:get_cwd(),
 	Guess = guess(Path, string:str(Path, "_rel")),
