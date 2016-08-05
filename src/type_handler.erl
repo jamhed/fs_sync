@@ -20,7 +20,8 @@ handle({Type, File}) ->
 	ok.
 
 handle_erl_compile(Module, {ok, Module, []}) ->
-	?INFO("'~p' recompiled.", [Module]);
+	?INFO("'~p' recompiled.", [Module]),
+	synthesize_beam_event(cfg:synthesize_beam_event(), code:which(Module));
 handle_erl_compile(Module, {ok, Module, Warnings}) ->
 	?WARN("'~p' recompiled with warnings.~n~n~s", [Module, lists:flatten(format_errors([], Warnings))]);
 handle_erl_compile(Module, {error, Errors, Warnings}) ->
@@ -74,3 +75,9 @@ format_error(Module, ErrorDescription) ->
 		false -> io_lib:format("~s", [ErrorDescription])
 	end.
 
+%% utils
+
+synthesize_beam_event(true, BeamFileName) ->
+	?INFO("synthetic beam event: ~p", [BeamFileName]),
+	handle({beam, BeamFileName});
+synthesize_beam_event(_, _) -> skip.
