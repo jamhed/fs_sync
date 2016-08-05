@@ -2,6 +2,7 @@ FS Sync
 =======
 
 Monitor events from fs\_event. Recompile .erl files on the fly using compile:file/2, reload beam files by code:load\_binary/3.
+Relies on FS Event application for file system events.
 
 Usage
 =====
