@@ -8,6 +8,9 @@ Usage
 ```erlang
 fs_sync:go("/cool/erlang/project/").
 fs_sync:go().
+fs_sync:stop().
+fs_sync:watch(Path).
+fs_sync:unwatch(Path).
 ```
 
 fs_sync:go/0 tries to guess project root (e.g. goes two level up from _rel folder).
