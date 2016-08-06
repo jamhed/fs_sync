@@ -29,3 +29,5 @@ Configuration options
 
 * **skip\_types** -- list of file extensions to ignore completely
 * **synthesize\_beam\_event** -- a helper for naive fs_event scanner, to reload beam file immediately after compilation
+* **after_handler**  -- see External handlers
+* **default_handler** -- see External handlers
