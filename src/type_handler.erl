@@ -1,14 +1,14 @@
 -module(type_handler).
--export([handle/1, explode_path/2]).
+-export([handle/1, explode_path/2, external_handler/3]).
 -include_lib("fs_sync/include/logger.hrl").
 
-handle({beam, File}) ->
+handle({"beam", File}) ->
 	Module = erlang:list_to_atom(filename:basename(File, ".beam")),
 	{Module, Binary, Filename} = code:get_object_code(Module),
 	code:load_binary(Module, Filename, Binary),
 	?INFO("module '~p' replaced by beam file.", [Module]),
 	ok;
-handle({erl, File}) ->
+handle({"erl", File}) ->
 	Module = erlang:list_to_atom(filename:basename(File, ".erl")),
 	ModuleProps = Module:module_info(compile),
 	Source = proplists:get_value(source, ModuleProps),
@@ -16,7 +16,8 @@ handle({erl, File}) ->
 	handle_erl_compile(Module, compile:file(filename:rootname(File), [return|Options])),
 	ok;
 handle({Type, File}) ->
-	?INFO("undefined handler for type:~p file:~p", [Type, File]),
+	% ?INFO("undefined handler for type:~p file:~p", [Type, File]),
+	external_handler(cfg:default_handler(), Type, File),
 	ok.
 
 handle_erl_compile(Module, {ok, Module, []}) ->
@@ -75,9 +76,24 @@ format_error(Module, ErrorDescription) ->
 		false -> io_lib:format("~s", [ErrorDescription])
 	end.
 
-%% utils
+%% utilities
 
 synthesize_beam_event(true, BeamFileName) ->
 	?INFO("synthetic beam event: ~p", [BeamFileName]),
-	handle({beam, BeamFileName});
+	handle({"beam", BeamFileName});
 synthesize_beam_event(_, _) -> skip.
+
+external_handler(false, _, _) -> skip; % no handler defined
+external_handler(Script, Type, File) when is_list(Script), is_list(Type), is_list(File) ->
+	{ok, Cwd} = file:get_cwd(),
+	Re = os:cmd(make_cmd(Script, Type, File)),
+	?INFO("after handler ~p for ~p in ~p\nresult: ~p", [Script, Type, Cwd, Re]),
+	ok;
+external_handler(Script, Type, File) ->
+	?ERR("wrong type: ~p ~p ~p", [Script, Type, File]),
+	skip.
+
+make_cmd(Script, Type, File) when is_list(Script), is_list(Type), is_list(File) ->
+	string:join([quote_file(Script), Type, quote_file(File)], " ").
+
+quote_file(File) -> string:join(["\"",File, "\""], "").

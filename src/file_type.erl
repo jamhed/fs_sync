@@ -4,7 +4,5 @@
 detect(File) ->
 	detect_by_ext(filename:extension(File)).
 
-detect_by_ext(".beam") -> beam;
-detect_by_ext(".erl") -> erl;
-detect_by_ext(".hrl") -> hrl;
-detect_by_ext(Ext) -> Ext.
+detect_by_ext("") -> "no_extenstion";
+detect_by_ext(Ext) -> string:sub_string(Ext, 2).
