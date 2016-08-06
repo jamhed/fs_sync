@@ -20,12 +20,13 @@ External handlers
 =================
 
 File type is determined by file extension. Natively handled types are "erl" and "beam". It is possible to define
-an external type handler for unknown file types as *default_handler* parameter (script will be executed in erlang node cwd),
-and an external handler to execute after internal handler -- *after_handler* parameter.
-External handlers will be called with Erlang os:cmd/1, with type and filename provided as command line arguments, see *example/handler.sh*.
+an external type handler for unknown file types as _default\_handler_ parameter (script will be executed in erlang node cwd),
+and an external handler to execute after internal handler -- _after\_handler_ parameter.
+External handlers are called with Erlang os:cmd/1, with type and filename provided as command line arguments, see _example/handler.sh_.
 
 Configuration options
 =====================
 
-*skip_types* -- list of file extensions to ignore completely
-*synthesize_beam_event* -- a helper for naive fs_event scanner, to reload beam file immediately after compilation
+_skip\_types_ -- list of file extensions to ignore completely
+
+_synthesize\_beam\_event_ -- a helper for naive fs_event scanner, to reload beam file immediately after compilation
