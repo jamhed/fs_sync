@@ -22,11 +22,11 @@ code_change(_OldVsn, S, _Extra) -> {ok, S}.
 
 handle_type(Type, File) ->
 	try
-		case cfg:is_skip(Type) of
+		case fs_sync_cfg:is_skip(Type) of
 			true -> skip;
 			_ ->
 				type_handler:handle({Type, File}),
-				type_handler:external_handler(cfg:after_handler(), Type, File)
+				type_handler:external_handler(fs_sync_cfg:after_handler(), Type, File)
 		end
 	catch
 		Error:Class ->

@@ -17,12 +17,12 @@ handle({"erl", File}) ->
 	ok;
 handle({Type, File}) ->
 	% ?INFO("undefined handler for type:~p file:~p", [Type, File]),
-	external_handler(cfg:default_handler(), Type, File),
+	external_handler(fs_sync_cfg:default_handler(), Type, File),
 	ok.
 
 handle_erl_compile(Module, {ok, Module, []}) ->
 	?INFO("'~p' recompiled.", [Module]),
-	synthesize_beam_event(cfg:synthesize_beam_event(), code:which(Module));
+	synthesize_beam_event(fs_sync_cfg:synthesize_beam_event(), code:which(Module));
 handle_erl_compile(Module, {ok, Module, Warnings}) ->
 	?WARN("'~p' recompiled with warnings.~n~n~s", [Module, lists:flatten(format_errors([], Warnings))]);
 handle_erl_compile(Module, {error, Errors, Warnings}) ->

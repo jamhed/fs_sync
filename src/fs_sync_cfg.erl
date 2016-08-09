@@ -1,4 +1,4 @@
--module(cfg).
+-module(fs_sync_cfg).
 -export([
 	synthesize_beam_event/0,
 	default_handler/0,
