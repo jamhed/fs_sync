@@ -2,14 +2,19 @@
 -behaviour(gen_server).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 -include_lib("fs_sync/include/logger.hrl").
--export([start/0, start/1, stop/0, watch/1, unwatch/1]).
+-export([start/0, start/1, start_link/0, start_link/1, stop/0, watch/1, unwatch/1]).
 
 -record(state, {watchers = []}).
 -record(watcher, {pid, path}).
 
 start() ->
-	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+	gen_server:start({local, ?MODULE}, ?MODULE, [], []).
 start(Path) ->
+	gen_server:start({local, ?MODULE}, ?MODULE, [Path], []).
+
+start_link() ->
+	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+start_link(Path) ->
 	gen_server:start_link({local, ?MODULE}, ?MODULE, [Path], []).
 
 watch(Path) ->
