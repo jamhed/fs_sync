@@ -9,7 +9,7 @@ go() ->
 	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
 trace(M, F) ->
-	gen_server:cast(?MODULE, {trace, M, F}).
+	gen_server:call(?MODULE, {trace, M, F}).
 
 handle_info({trace_ts, _Sender, call, {M,F,A}, _TS}, S=#state{}) ->
 	io:format("TRACE: ~s:~s(~p)~n", [M,F,A]),
@@ -21,17 +21,17 @@ handle_info(Msg, S=#state{}) ->
 init([]) ->
 	{ok, #state{pid=self()}}.
 
-handle_cast({trace, M, F}, S=#state{pid=Pid}) ->
+handle_cast(_Msg, S=#state{}) -> {noreply, S}.
+
+handle_call({trace, M, F}, _From, S=#state{pid=Pid}) ->
 	erlang:trace(all, true, [call, return_to]),
 	Pattern = [{
 		'$1',
 		[],
 		[return_trace]
 	}],
-	erlang:trace_pattern({M,F,'_'}, Pattern, [{meta, Pid}]),
-	{noreply, S};
-handle_cast(_Msg, S=#state{}) -> {noreply, S}.
-
+	Num = erlang:trace_pattern({M,F,'_'}, Pattern, [{meta, Pid}]),
+	{reply, Num, S};
 handle_call(_Request, _From, S=#state{}) -> {reply, ok, S}.
 terminate(_Reason, _S) -> ok.
 code_change(_OldVsn, S=#state{}, _Extra) -> {ok, S}.
