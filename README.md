@@ -56,3 +56,10 @@ Complete documented configuration file [sys.config](rel/sys.config).
 * **synthesize\_beam\_event** -- a helper for naive fs_event scanner, to reload beam file immediately after compilation
 * **after_handler**  -- see External handlers
 * **default_handler** -- see External handlers
+
+Future plans
+============
+
+1. Integrate with fs_sync (e.g. re-apply tracing on module reload)
+2. Maybe handle .hrl changes as well, a-la @choptastics sync
+3. Have examples for external tools (rebar, namely)
