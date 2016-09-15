@@ -36,6 +36,8 @@ TRACE: lists:seq/2 <- [1,5]
 TRACE: lists:seq/2 -> [1,2,3,4,5]
 ```
 
+Please note that when module is reloaded (e.g. with fs_sync), then tracing is resetted.
+
 External handlers
 =================
 
