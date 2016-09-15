@@ -7,13 +7,34 @@ Usage
 =====
 ```erlang
 fs_sync:start("/cool/erlang/project/").
-fs_sync:start().
+fs_sync:start()/go().
 fs_sync:stop().
 fs_sync:watch(Path).
 fs_sync:unwatch(Path).
 ```
 
 fs_sync:go/0 tries to guess project root (e.g. goes two level up from _rel folder).
+
+Tracer
+======
+```erlang
+fs_tracer:go().
+fs_tracer:add(Module, Function).
+fs_tracer:del(Module, Function).
+fs_tracer:list().
+fs_tracer:clear().
+```
+
+Enables tracing for specific functions. Tracing is enabled on all processes.
+
+Sample output:
+```erlang
+(fs_sync@127.0.0.1)1> fs_tracer:go().
+(fs_sync@127.0.0.1)2> fs_tracer:add(lists, seq).
+(fs_sync@127.0.0.1)3> spawn(fun() -> X = lists:seq(1,5) end).
+TRACE: lists:seq/2 <- [1,5]
+TRACE: lists:seq/2 -> [1,2,3,4,5]
+```
 
 External handlers
 =================
