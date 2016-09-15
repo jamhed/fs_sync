@@ -18,10 +18,13 @@ list() ->
 	gen_server:call(?MODULE, {list}).
 
 handle_info({trace_ts, _Sender, call, {M,F,A}, _TS}, S=#state{}) ->
-	io:format("TRACE: ~s:~s(~p)~n", [M,F,A]),
+	io:format("TRACE: ~s:~s/~p <- ~p~n", [M, F, erlang:length(A), A]),
 	{noreply, S};
 handle_info({trace_ts, _Sender, return_to, {M,F,A}, _TS}, S=#state{}) ->
-	io:format("TRACE: -> ~s:~s/~p~n", [M,F,A]),
+	io:format("TRACE: ~s:~s/~p~n", [M,F,A]),
+	{noreply, S};
+handle_info({trace_ts, _Sender, return_from, {M,F,A}, Value, _TS}, S=#state{}) ->
+	io:format("TRACE: ~s:~s/~p -> ~p~n", [M,F,A, Value]),
 	{noreply, S};
 handle_info(Msg, S=#state{}) ->
 	io:format("TRACE ALL:~p~n", [Msg]),
@@ -57,14 +60,14 @@ handle_call(_Request, _From, S=#state{}) -> {reply, ok, S}.
 terminate(_Reason, _S) -> ok.
 code_change(_OldVsn, S=#state{}, _Extra) -> {ok, S}.
 
-del_trace(Pid, M, F) ->
+del_trace(_Pid, M, F) ->
 	erlang:trace_pattern({M,F,'_'}, false, [local]).
 
 add_trace(Pid, M, F) ->
-	erlang:trace(all, true, [call, return_to, timestamp, {tracer, Pid}]),
+	erlang:trace(all, true, [call, timestamp, {tracer, Pid}]),
 	Pattern = [{
-		'$1',
+		'_',
 		[],
-		[return_trace]
+		[{return_trace}]
 	}],
 	erlang:trace_pattern({M,F,'_'}, Pattern, [local]).
