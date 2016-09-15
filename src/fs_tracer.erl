@@ -20,6 +20,9 @@ list() ->
 handle_info({trace_ts, _Sender, call, {M,F,A}, _TS}, S=#state{}) ->
 	io:format("TRACE: ~s:~s(~p)~n", [M,F,A]),
 	{noreply, S};
+handle_info({trace_ts, _Sender, return_to, {M,F,A}, _TS}, S=#state{}) ->
+	io:format("TRACE: -> ~s:~s/~p~n", [M,F,A]),
+	{noreply, S};
 handle_info(Msg, S=#state{}) ->
 	io:format("TRACE ALL:~p~n", [Msg]),
 	{noreply, S}.
@@ -55,13 +58,13 @@ terminate(_Reason, _S) -> ok.
 code_change(_OldVsn, S=#state{}, _Extra) -> {ok, S}.
 
 del_trace(Pid, M, F) ->
-	erlang:trace_pattern({M,F,'_'}, false, [{meta, Pid}]).
+	erlang:trace_pattern({M,F,'_'}, false, [local]).
 
 add_trace(Pid, M, F) ->
-	erlang:trace(all, true, [call, timestamp]),
+	erlang:trace(all, true, [call, return_to, timestamp, {tracer, Pid}]),
 	Pattern = [{
 		'$1',
 		[],
 		[return_trace]
 	}],
-	erlang:trace_pattern({M,F,'_'}, Pattern, [{meta, Pid}]).
+	erlang:trace_pattern({M,F,'_'}, Pattern, [local]).
