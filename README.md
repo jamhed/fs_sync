@@ -3,8 +3,8 @@ FS Sync
 
 Monitors file system events using [fs\_event](http://github.com/jamhed/fs_event) and recompiles .erl files on the fly using compile:file/2, reloads beam files by code:load\_binary/3.
 
-Usage
-=====
+Syncer
+======
 ```erlang
 fs_sync:start("/cool/erlang/project/").
 fs_sync:start()/go().
