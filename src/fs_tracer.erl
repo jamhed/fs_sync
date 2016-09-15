@@ -18,13 +18,13 @@ list() ->
 	gen_server:call(?MODULE, {list}).
 
 handle_info({trace_ts, _Sender, call, {M,F,A}, _TS}, S=#state{}) ->
-	io:format("TRACE: ~s:~s/~p <- ~p~n", [M, F, erlang:length(A), A]),
+	io:format("TRACE: ~s:~s/~p <- ~180p~n", [M, F, erlang:length(A), A]),
 	{noreply, S};
 handle_info({trace_ts, _Sender, return_to, {M,F,A}, _TS}, S=#state{}) ->
 	io:format("TRACE: ~s:~s/~p~n", [M,F,A]),
 	{noreply, S};
 handle_info({trace_ts, _Sender, return_from, {M,F,A}, Value, _TS}, S=#state{}) ->
-	io:format("TRACE: ~s:~s/~p -> ~p~n", [M,F,A, Value]),
+	io:format("TRACE: ~s:~s/~p -> ~180p~n", [M,F,A, Value]),
 	{noreply, S};
 handle_info(Msg, S=#state{}) ->
 	io:format("TRACE ALL:~p~n", [Msg]),
