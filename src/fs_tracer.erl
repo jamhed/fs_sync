@@ -55,7 +55,7 @@ terminate(_Reason, _S) -> ok.
 code_change(_OldVsn, S=#state{}, _Extra) -> {ok, S}.
 
 del_trace(Pid, M, F) ->
-	erlang:trace_pattern({M,F,'_'}, false, [local, {meta, Pid}]).
+	erlang:trace_pattern({M,F,'_'}, false, [{meta, Pid}]).
 
 add_trace(Pid, M, F) ->
 	erlang:trace(all, true, [call, timestamp]),
@@ -64,4 +64,4 @@ add_trace(Pid, M, F) ->
 		[],
 		[return_trace]
 	}],
-	erlang:trace_pattern({M,F,'_'}, Pattern, [local, {meta, Pid}]).
+	erlang:trace_pattern({M,F,'_'}, Pattern, [{meta, Pid}]).
