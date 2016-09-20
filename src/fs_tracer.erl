@@ -31,6 +31,9 @@ safe_formatter(F, A) ->
 		_:_ -> A
 	end.
 
+one([X]) -> X;
+one(X) -> X.
+
 apply_formatter(undefined, Args) -> Args;
 apply_formatter(F, Args) ->
 	lists:map(fun(A) -> safe_formatter(F, A) end, Args).
@@ -42,7 +45,7 @@ handle_info({trace_ts, _Sender, return_to, {M,F,A}, _TS}, S=#state{}) ->
 	io:format("TRACE: ~s:~s/~p~n", [M,F,A]),
 	{noreply, S};
 handle_info({trace_ts, _Sender, return_from, {M,F,A}, Value, _TS}, S=#state{formatter=Fmt}) ->
-	io:format("TRACE: ~s:~s/~p -> ~180p~n", [M,F,A,apply_formatter(Fmt, [Value])]),
+	io:format("TRACE: ~s:~s/~p -> ~180p~n", [M,F,A, one(apply_formatter(Fmt, [Value]))]),
 	{noreply, S};
 handle_info(Msg, S=#state{}) ->
 	io:format("TRACE ALL:~p~n", [Msg]),
