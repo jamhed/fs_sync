@@ -38,6 +38,20 @@ TRACE: lists:seq/2 -> [1,2,3,4,5]
 
 Please note that when module is reloaded (e.g. with fs_sync), then tracing is resetted.
 
+Tracer formatter
+================
+
+To process trace arguments (think of huge erlang structs) one can use a formatter function:
+```erlang
+fs_tracer:formatter(fun(X) -> X end).
+```
+
+This function will be applied to each function argument one by one, and to function result.
+There is a built-in formatter to hide records by their names:
+```erlang
+fs_tracer:formatter(fun tracer_fmt:hide_records/1).
+```
+
 External handlers
 =================
 
