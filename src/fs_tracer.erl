@@ -35,14 +35,14 @@ apply_formatter(undefined, Args) -> Args;
 apply_formatter(F, Args) ->
 	lists:map(fun(A) -> safe_formatter(F, A) end, Args).
 
-handle_info({trace_ts, _Sender, call, {M,F,A}, _TS}, S=#state{formatter=F}) ->
-	io:format("TRACE: ~s:~s/~p <- ~180p~n", [M, F, erlang:length(A), apply_formatter(F, A)]),
+handle_info({trace_ts, _Sender, call, {M,F,A}, _TS}, S=#state{formatter=Fmt}) ->
+	io:format("TRACE: ~s:~s/~p <- ~180p~n", [M, F, erlang:length(A), apply_formatter(Fmt, A)]),
 	{noreply, S};
 handle_info({trace_ts, _Sender, return_to, {M,F,A}, _TS}, S=#state{}) ->
 	io:format("TRACE: ~s:~s/~p~n", [M,F,A]),
 	{noreply, S};
-handle_info({trace_ts, _Sender, return_from, {M,F,A}, Value, _TS}, S=#state{}) ->
-	io:format("TRACE: ~s:~s/~p -> ~180p~n", [M,F,A,Value]),
+handle_info({trace_ts, _Sender, return_from, {M,F,A}, Value, _TS}, S=#state{formatter=Fmt}) ->
+	io:format("TRACE: ~s:~s/~p -> ~180p~n", [M,F,A,apply_formatter(Fmt, [Value])]),
 	{noreply, S};
 handle_info(Msg, S=#state{}) ->
 	io:format("TRACE ALL:~p~n", [Msg]),
