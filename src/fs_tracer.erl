@@ -2,12 +2,19 @@
 -behaviour(gen_server).
 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
 -export([go/0, add/2, del/2, clear/0, list/0]).
+-export([formatter/1]).
 
--record(state, {pid, trace}).
+-record(state, {
+	pid :: pid(),
+	trace :: list(),
+	formatter = undefined :: fun()
+}).
 
 go() ->
 	gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
 
+formatter(F) ->
+	gen_server:call(?MODULE, {formatter, F}).
 add(M, F) ->
 	gen_server:call(?MODULE, {add, M, F}).
 clear() ->
@@ -17,14 +24,25 @@ del(M,F) ->
 list() ->
 	gen_server:call(?MODULE, {list}).
 
-handle_info({trace_ts, _Sender, call, {M,F,A}, _TS}, S=#state{}) ->
-	io:format("TRACE: ~s:~s/~p <- ~180p~n", [M, F, erlang:length(A), A]),
+safe_formatter(F, A) ->
+	try
+		F(A)
+	catch
+		_:_ -> A
+	end.
+
+apply_formatter(undefined, Args) -> Args;
+apply_formatter(F, Args) ->
+	lists:map(fun(A) -> safe_formatter(F, A) end, Args).
+
+handle_info({trace_ts, _Sender, call, {M,F,A}, _TS}, S=#state{formatter=F}) ->
+	io:format("TRACE: ~s:~s/~p <- ~180p~n", [M, F, erlang:length(A), apply_formatter(F, A)]),
 	{noreply, S};
 handle_info({trace_ts, _Sender, return_to, {M,F,A}, _TS}, S=#state{}) ->
 	io:format("TRACE: ~s:~s/~p~n", [M,F,A]),
 	{noreply, S};
 handle_info({trace_ts, _Sender, return_from, {M,F,A}, Value, _TS}, S=#state{}) ->
-	io:format("TRACE: ~s:~s/~p -> ~180p~n", [M,F,A, Value]),
+	io:format("TRACE: ~s:~s/~p -> ~180p~n", [M,F,A,Value]),
 	{noreply, S};
 handle_info(Msg, S=#state{}) ->
 	io:format("TRACE ALL:~p~n", [Msg]),
@@ -51,6 +69,8 @@ handle_call({del, M, F}, _From, S=#state{pid=Pid, trace=Trace}) ->
 		false ->
 			{reply, 0, S}
 	end;
+handle_call({formatter, F}, _From, S=#state{}) ->
+	{reply, ok, S#state{formatter=F}};
 handle_call({clear}, _From, S=#state{pid=Pid, trace=Trace}) ->
 	Re = [ del_trace(Pid, M, F) || {M,F} <- Trace ],
 	{reply, Re, S#state{trace=[]}};
