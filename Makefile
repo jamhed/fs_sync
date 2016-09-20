@@ -4,4 +4,4 @@ devel:
 
 console: 
 	rebar3 release
-	 _build/default/rel/fs_sync/bin/fs_sync console
+	_build/default/rel/fs_sync/bin/fs_sync console
