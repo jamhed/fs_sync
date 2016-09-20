@@ -1,4 +1,6 @@
 /ebin
 /deps
 /.rebar
+/rebar.lock
 /_rel
+/_build

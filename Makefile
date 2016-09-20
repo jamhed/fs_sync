@@ -1,9 +1,7 @@
 devel:
-	rm -rf _rel
-	rebar get-deps
-	rebar compile
-	relx -d
+	rm -rf _build
+	rebar3 compile
 
 console: 
-	rebar co
-	_rel/fs_sync/bin/fs_sync console
+	rebar3 release
+	 _build/default/rel/fs_sync/bin/fs_sync console
