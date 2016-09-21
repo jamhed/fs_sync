@@ -7,7 +7,7 @@
 -record(state, {
 	pid :: pid(),
 	trace :: list(),
-	formatter = undefined :: fun()
+	formatter = undefined :: undefined | fun()
 }).
 
 go() ->
