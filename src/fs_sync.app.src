@@ -8,7 +8,7 @@
 			stdlib,
 			syntax_tools,
 			compiler,
-         fs_event
+			fs_event
 		]},
 		{mod, { fs_sync_app, []}},
 		{env, []},
