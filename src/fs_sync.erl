@@ -25,17 +25,26 @@ watch(Path) ->
 unwatch(Path) ->
 	gen_server:call(?MODULE, {unwatch, Path}).
 
-guess(Path, N) when N > 2 -> string:left(Path, N-2);
-guess(Path, _) -> Path.
+trunc(Path, N) when N > 2 -> string:left(Path, N-2);
+trunc(Path, _) -> Path.
+
+match(Path, Folder) -> trunc(Path, string:str(Path, Folder)).
+
+guess_app_folder(Cwd, []) -> Cwd;
+guess_app_folder(Cwd, [Opt|Options]) ->
+	case match(Cwd, Opt) of
+		Cwd -> guess_app_folder(Cwd, Options);
+		Folder -> Folder
+	end.
 
 stop() -> gen_server:cast(?MODULE, {stop}).
 
 %% API impl
 
 init([]) ->
-	{ok, Path} = file:get_cwd(),
-	Guess = guess(Path, string:str(Path, "_rel")),
-	{ok, #state{watchers=[start_watcher(Guess)]}};
+	{ok, Cwd} = file:get_cwd(),
+	AppFolder = guess_app_folder(Cwd, ["_rel", "_build"]),
+	{ok, #state{watchers=[start_watcher(AppFolder)]}};
 init([Path]) ->
 	{ok, #state{watchers=[start_watcher(Path)]}}.
 
