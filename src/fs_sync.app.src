@@ -1,18 +1,10 @@
-{application,
-	fs_sync, [
-		{description, "Hot code reloader"},
-		{vsn, "1.0.1"},
-		{registered, []},
-		{applications, [
-			kernel,
-			stdlib,
-			syntax_tools,
-			compiler,
-			fs_event
-		]},
-		{mod, { fs_sync_app, []}},
-		{env, []},
-		{maintainers, ["Roman Galeev"]},
-		{licenses, ["GNU GPL"]},
-		{links, [{"Github", "https://github.com/jamhed/fs_sync"}]}
-]}.
+{application,fs_sync,
+             [{description,"Hot code reloader"},
+              {vsn,"1.0.1"},
+              {registered,[]},
+              {applications,[kernel,stdlib,syntax_tools,compiler,fs_event]},
+              {mod,{fs_sync_app,[]}},
+              {env,[]},
+              {maintainers,["Roman Galeev"]},
+              {licenses,["GNU GPL"]},
+              {links,[{"Github","https://github.com/jamhed/fs_sync"}]}]}.
