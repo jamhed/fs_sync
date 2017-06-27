@@ -85,9 +85,13 @@ synthesize_beam_event(_, _) -> skip.
 
 external_handler(false, _, _) -> skip; % no handler defined
 external_handler(Script, Type, File) when is_list(Script), is_list(Type), is_list(File) ->
-	{ok, Cwd} = file:get_cwd(),
+	% {ok, Cwd} = file:get_cwd(),
+	% ?INFO("after handler ~p for ~p in ~p", [Script, Type, Cwd]),
 	Re = os:cmd(make_cmd(Script, Type, File)),
-	?INFO("after handler ~p for ~p in ~p\nresult: ~p", [Script, Type, Cwd, Re]),
+   case length(Re) > 0 of
+      true -> ?INFO("~s", [unicode:characters_to_list(Re)]);
+      _ -> skip
+   end,
 	ok;
 external_handler(Script, Type, File) ->
 	?ERR("wrong type: ~p ~p ~p", [Script, Type, File]),
