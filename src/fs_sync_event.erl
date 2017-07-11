@@ -30,5 +30,6 @@ handle_type(Type, File) ->
 		end
 	catch
 		Error:Class ->
-			?ERR("error handling ~120p ~120p:~120p file:~120p", [Type, Class, Error, File])
+			?ERR("error handling ~120p ~120p:~120p file:~120p", [Type, Class, Error, File]),
+			type_handler:fallback_handler(fs_sync_cfg:fallback_handler(), Type, File)
 	end.

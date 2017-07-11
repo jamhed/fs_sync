@@ -1,5 +1,5 @@
 -module(type_handler).
--export([handle/1, explode_path/2, external_handler/3]).
+-export([handle/1, explode_path/2, external_handler/3, fallback_handler/3]).
 -include_lib("fs_sync/include/logger.hrl").
 
 handle({"beam", File}) ->
@@ -94,6 +94,21 @@ external_handler(Script, Type, File) when is_list(Script), is_list(Type), is_lis
    end,
 	ok;
 external_handler(Script, Type, File) ->
+	?ERR("wrong type: ~p ~p ~p", [Script, Type, File]),
+	skip.
+
+
+fallback_handler(false, _, _) -> skip; % no handler defined
+fallback_handler(Script, Type, File) when is_list(Script), is_list(Type), is_list(File) ->
+	% {ok, Cwd} = file:get_cwd(),
+	% ?INFO("after handler ~p for ~p in ~p", [Script, Type, Cwd]),
+	Re = os:cmd(make_cmd(Script, Type, File)),
+   case length(Re) > 0 of
+      true -> ?INFO("~s", [unicode:characters_to_list(Re)]);
+      _ -> skip
+   end,
+	ok;
+fallback_handler(Script, Type, File) ->
 	?ERR("wrong type: ~p ~p ~p", [Script, Type, File]),
 	skip.
 
