@@ -6,14 +6,14 @@ handle({"beam", File}) ->
 	Module = erlang:list_to_atom(filename:basename(File, ".beam")),
 	{Module, Binary, Filename} = code:get_object_code(Module),
 	code:load_binary(Module, Filename, Binary),
-	?INFO("module '~p' replaced by beam file.", [Module]),
+	?INFO("module '~p' replaced by new beam", [Module]),
 	ok;
 handle({"erl", File}) ->
 	Module = erlang:list_to_atom(filename:basename(File, ".erl")),
 	ModuleProps = Module:module_info(compile),
 	Source = proplists:get_value(source, ModuleProps),
 	Options = transform_options(Module, Source, proplists:get_value(options, ModuleProps)),
-	handle_erl_compile(Module, compile:file(filename:rootname(File), [return|Options])),
+	handle_erl_compile(Module, compile:file(filename:rootname(File), [return,{outdir, filename:dirname(code:which(Module))}|Options])),
 	ok;
 handle({Type, File}) ->
 	% ?INFO("undefined handler for type:~p file:~p", [Type, File]),
