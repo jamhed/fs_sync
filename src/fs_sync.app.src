@@ -1,6 +1,6 @@
 {application,fs_sync,
              [{description,"Hot code reloader"},
-              {vsn,"1.1.2"},
+              {vsn,"1.0.1"},
               {registered,[]},
               {applications,[kernel,stdlib,syntax_tools,compiler,fs_event]},
               {mod,{fs_sync_app,[]}},
